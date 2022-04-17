@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>0.1.0</Version>
+		<Authors>Scighost</Authors>
+		<Company>Xunkong</Company>
+		<Description>Hoyolab API of Genshin Impact (only for Chinese server).</Description>
+		<PackageProjectUrl>https://xunkong.cc</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/xunkong/Hoyolab</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>xunkong genshin</PackageTags>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(DefineConstants.Contains(`NativeAOT`)) == true">
+		<AssemblyName>Xunkong.Hoyolab.NativeAOT</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup Condition="$(DefineConstants.Contains(`Develop`)) == true">
+		<ProjectReference Include="..\..\Core\Xunkong.Core\Xunkong.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(DefineConstants.Contains(`Develop`)) == false">
+		<PackageReference Include="Xunkong.Core" Version="0.1.0-*" />
+	</ItemGroup>
+
+</Project>
