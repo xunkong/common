@@ -4,7 +4,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.1.0</Version>
+		<Version>0.1.1</Version>
 		<Authors>Scighost</Authors>
 		<Company>Xunkong</Company>
 		<Description>Hoyolab API of Genshin Impact (only for Chinese server).</Description>
@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(DefineConstants.Contains(`Develop`)) == false">
-		<PackageReference Include="Xunkong.Core" Version="0.1.0-*" />
+		<PackageReference Include="Xunkong.Core" Version="0.1.0" />
 	</ItemGroup>
 
 </Project>

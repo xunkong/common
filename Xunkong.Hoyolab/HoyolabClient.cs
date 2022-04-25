@@ -54,6 +54,8 @@ public class HoyolabClient
 
     private async Task<T> CommonSendAsync<T>(HttpRequestMessage request, CancellationToken? cancellationToken = null) where T : class
     {
+        request.Headers.Add(Accept, Application_Json);
+        request.Headers.Add(UserAgent, UA2251);
         var response = await _httpClient.SendAsync(request, cancellationToken ?? CancellationToken.None);
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
@@ -96,8 +98,6 @@ public class HoyolabClient
             throw new ArgumentException(@"Cookie does not contain ""account_id"" or ""cookie_token"".");
         }
         var request = new HttpRequestMessage(HttpMethod.Get, "https://bbs-api.mihoyo.com/user/wapi/getUserFullInfo?gids=2");
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, cookie);
         request.Headers.Add(Referer, "https://bbs.mihoyo.com/");
         request.Headers.Add(DS, DynamicSecret.CreateSecret());
@@ -129,8 +129,6 @@ public class HoyolabClient
         }
         var url = "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, cookie);
         request.Headers.Add(DS, DynamicSecret.CreateSecret2(url));
         request.Headers.Add(X_Reuqest_With, com_mihoyo_hyperion);
@@ -151,8 +149,6 @@ public class HoyolabClient
     public async Task<SignInInfo> GetSignInInfoAsync(GenshinRoleInfo role, CancellationToken? cancellationToken = null)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"https://api-takumi.mihoyo.com/event/bbs_sign_reward/info?act_id=e202009291139501&region={role.Region}&uid={role.Uid}");
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(x_rpc_device_id, DeviceId);
         request.Headers.Add(X_Reuqest_With, com_mihoyo_hyperion);
@@ -174,9 +170,7 @@ public class HoyolabClient
             return false;
         }
         var obj = new { act_id = "e202009291139501", region = role.Region.ToString(), uid = role.Uid.ToString() };
-        var request = new HttpRequestMessage(HttpMethod.Get, "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign");
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign");
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(DS, DynamicSecret.CreateSecret());
         request.Headers.Add(x_rpc_app_version, AppVersion);
@@ -199,8 +193,6 @@ public class HoyolabClient
     {
         var url = $"https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/index?server={role.Region}&role_id={role.Uid}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(DS, DynamicSecret.CreateSecret2(url));
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/app/community-game-records/?game_id=2&utm_source=bbs&utm_medium=mys&utm_campaign=box");
@@ -225,8 +217,6 @@ public class HoyolabClient
         };
         var url = "https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/character";
         var request = new HttpRequestMessage(HttpMethod.Post, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(DS, DynamicSecret.CreateSecret2(url, obj));
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/app/community-game-records/?bbs_presentation_style=fullscreen");
@@ -249,8 +239,6 @@ public class HoyolabClient
     {
         var url = $"https://api-takumi.mihoyo.com/event/e20200928calculate/v1/sync/avatar/detail?avatar_id={characterId}&uid={role.Uid}&region={role.Region}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(X_Reuqest_With, com_mihoyo_hyperion);
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/ys/event/e20200923adopt_calculator/index.html?bbs_presentation_style=fullscreen&bbs_auth_required=true&utm_source=bbs&utm_medium=mys&utm_campaign=icon");
@@ -269,8 +257,6 @@ public class HoyolabClient
     {
         var url = $"https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/activities?server={role.Region}&role_id={role.Uid}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(DS, DynamicSecret.CreateSecret2(url));
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/app/community-game-records/?game_id=2&utm_source=bbs&utm_medium=mys&utm_campaign=box");
@@ -291,8 +277,6 @@ public class HoyolabClient
     {
         var url = $"https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/dailyNote?server={role.Region}&role_id={role.Uid}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(DS, DynamicSecret.CreateSecret2(url));
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/app/community-game-records/?game_id=2&utm_source=bbs&utm_medium=mys&utm_campaign=box");
@@ -317,8 +301,6 @@ public class HoyolabClient
     {
         var url = $"https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo?month=0&bind_uid={role.Uid}&bind_region={role.Region}&bbs_presentation_style=fullscreen&bbs_auth_required=true&utm_source=bbs&utm_medium=mys&utm_campaign=icon";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/ys/event/e20200709ysjournal/index.html?bbs_presentation_style=fullscreen&bbs_auth_required=true&utm_source=bbs&utm_medium=mys&utm_campaign=icon");
         request.Headers.Add(X_Reuqest_With, com_mihoyo_hyperion);
@@ -340,8 +322,6 @@ public class HoyolabClient
     {
         var url = $"https://hk4e-api.mihoyo.com/event/ys_ledger/monthDetail?page={page}&month={month}&limit={limit}&type={(int)type}&bind_uid={role.Uid}&bind_region={role.Region}&bbs_presentation_style=fullscreen&bbs_auth_required=true&utm_source=bbs&utm_medium=mys&utm_campaign=icon";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/ys/event/e20200709ysjournal/index.html?bbs_presentation_style=fullscreen&bbs_auth_required=true&utm_source=bbs&utm_medium=mys&utm_campaign=icon");
         request.Headers.Add(X_Reuqest_With, com_mihoyo_hyperion);
@@ -394,8 +374,6 @@ public class HoyolabClient
     {
         var url = $"https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/spiralAbyss?schedule_type={schedule}&server={role.Region}&role_id={role.Uid}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(DS, DynamicSecret.CreateSecret2(url));
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/app/community-game-records/?game_id=2&utm_source=bbs&utm_medium=mys&utm_campaign=box");
@@ -419,8 +397,6 @@ public class HoyolabClient
     {
         var url = $"https://bbs-api.mihoyo.com/post/api/getNewsList?gids=2&last_id={lastId}&page_size={size}&type={(int)type}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(DS, DynamicSecret.CreateSecret());
         request.Headers.Add(Referer, "https://app.mihoyo.com");
         request.Headers.Add(x_rpc_app_version, AppVersion);
@@ -438,8 +414,6 @@ public class HoyolabClient
     {
         var url = $"https://bbs-api.mihoyo.com/post/api/getPostFull?post_id={postId}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
         request.Headers.Add(DS, DynamicSecret.CreateSecret());
         request.Headers.Add(Referer, "https://app.mihoyo.com");
         request.Headers.Add(x_rpc_app_version, AppVersion);
