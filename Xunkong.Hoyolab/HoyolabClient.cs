@@ -173,7 +173,7 @@ public class HoyolabClient
         var request = new HttpRequestMessage(HttpMethod.Post, "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign");
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(DS, DynamicSecret.CreateSecret());
-        request.Headers.Add(x_rpc_app_version, AppVersion);
+        request.Headers.Add(x_rpc_app_version, "2.10.1");
         request.Headers.Add(x_rpc_device_id, DeviceId);
         request.Headers.Add(x_rpc_client_type, "5");
         request.Headers.Add(X_Reuqest_With, com_mihoyo_hyperion);
