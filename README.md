@@ -1,12 +1,10 @@
-# Xunkong.Hoyolab
+> 米游社原神部分 API，以及其他内容
+
+## Xunkong.Hoyolab
 
 [![nuget](https://img.shields.io/nuget/v/Xunkong.Hoyolab.svg?style=flat-square)](https://www.nuget.org/packages/Xunkong.Hoyolab/)
 
-米游社原神部分 API
-
-## 如何使用
-
-> 详细内容请看代码注释
+更多细节请看代码注释
 
 ### 引用
 
@@ -54,6 +52,8 @@ var newsDetail = await client.GetNewsDetailAsync(newsList.FirstOrDefault()?.Post
 ```
 
 ### 抽卡记录
+
+> Windows 平台限定
 
 ``` CSharp
 using Xunkong.Hoyolab.Wishlog;
