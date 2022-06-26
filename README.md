@@ -10,8 +10,6 @@
 
 ```
 dotnet add package Xunkong.Hoyolab
-// 一般引用上面这个，如果使用 NativeAOT，则引用下面这个
-dotnet add package Xunkong.Hoyolab.NativeAOT
 ```
 
 ### 米游社
