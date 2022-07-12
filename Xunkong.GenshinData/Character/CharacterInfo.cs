@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Xunkong.GenshinData.Character;
+﻿namespace Xunkong.GenshinData.Character;
 
 public class CharacterInfo
 {

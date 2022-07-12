@@ -5,8 +5,6 @@
 /// </summary>
 public class TravelNotesMonthData
 {
-    [JsonIgnore]
-    public int Id { get; set; }
 
     public int Uid { get; set; }
 

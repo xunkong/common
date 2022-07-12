@@ -5,7 +5,7 @@
 /// </summary>
 public class CharacterTalentInfo
 {
-    
+
     public int Id { get; set; }
 
     public int TalentId { get; set; }

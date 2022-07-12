@@ -88,6 +88,12 @@ public class DailyNoteInfo
     public int CurrentExpeditionNumber { get; set; }
 
     /// <summary>
+    /// 已完成派遣数
+    /// </summary>
+    [JsonIgnore]
+    public int FinishedExpeditionNumber => Expeditions?.Count(x => x.IsFinished) ?? 0;
+
+    /// <summary>
     /// 最大派遣数
     /// </summary>
     [JsonPropertyName("max_expedition_num")]

@@ -2,7 +2,7 @@
 
 public class WeaponSkill
 {
-    
+
     public int Id { get; set; }
 
     public int Level { get; set; }

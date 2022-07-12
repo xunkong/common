@@ -7,6 +7,7 @@ using Xunkong.Hoyolab.GameRecord;
 using Xunkong.Hoyolab.News;
 using Xunkong.Hoyolab.SpiralAbyss;
 using Xunkong.Hoyolab.TravelNotes;
+using Xunkong.Hoyolab.Wiki;
 
 namespace Xunkong.Hoyolab;
 
@@ -299,7 +300,7 @@ public class HoyolabClient
     /// <returns></returns>
     public async Task<TravelNotesSummary> GetTravelNotesSummaryAsync(GenshinRoleInfo role, int month = 0, CancellationToken? cancellationToken = null)
     {
-        var url = $"https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo?month=0&bind_uid={role.Uid}&bind_region={role.Region}&bbs_presentation_style=fullscreen&bbs_auth_required=true&utm_source=bbs&utm_medium=mys&utm_campaign=icon";
+        var url = $"https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo?month={month}&bind_uid={role.Uid}&bind_region={role.Region}&bbs_presentation_style=fullscreen&bbs_auth_required=true&utm_source=bbs&utm_medium=mys&utm_campaign=icon";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/ys/event/e20200709ysjournal/index.html?bbs_presentation_style=fullscreen&bbs_auth_required=true&utm_source=bbs&utm_medium=mys&utm_campaign=icon");
@@ -420,6 +421,45 @@ public class HoyolabClient
         var data = await CommonSendAsync<NewsDetailWrapper>(request);
         return data.Post.Post;
     }
+
+
+
+    /// <summary>
+    /// 天赋日历
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<TalentCalendar>> GetTalentCalenarsListAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, "https://api-static.mihoyo.com/common/blackboard/ys_obc/v1/get_activity_calendar?app_sn=ys_obc");
+        var data = await CommonSendAsync<ListWrapper<TalentCalendar>>(request);
+        return data.List.Where(x => x.Kind == "2").ToList();
+    }
+
+
+    /// <summary>
+    /// 近期活动
+    /// </summary>
+    /// <returns></returns>
+    public async Task<(List<Activity> Activities, List<Activity> Strategies)> GetGameActivitiesListAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, "https://api-static.mihoyo.com/common/blackboard/ys_obc/v1/home/recommend/list?app_sn=ys_obc&position_id=48");
+        var node = await CommonSendAsync<JsonNode>(request);
+        List<Activity> activities = new();
+        List<Activity> strategies = new();
+        if (node["list"]?[0]?["children"]?[0]?["children"]?[0]?["list"] is JsonArray array1)
+        {
+            activities = array1.Deserialize<List<Activity>>() ?? new List<Activity>();
+        }
+        if (node["list"]?[0]?["children"]?[0]?["children"]?[1]?["list"] is JsonArray array2)
+        {
+            strategies = array2.Deserialize<List<Activity>>() ?? new List<Activity>();
+        }
+        return (activities ?? new(), strategies ?? new());
+    }
+
+
+
+
 
 
 }

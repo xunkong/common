@@ -21,10 +21,6 @@ public class WishlogClient
 
     private readonly HttpClient _httpClient;
 
-    /// <summary>
-    /// 获取记录的进度
-    /// </summary>
-    public event EventHandler<(WishType WishType, int Page)>? ProgressChanged;
 
 
     public WishlogClient(HttpClient? httpClient = null)
@@ -135,13 +131,13 @@ public class WishlogClient
     /// <param name="size">每次api请求获取几条数据，不超过20，默认6</param>
     /// <returns>没有数据返回空集合</returns>
     /// <exception cref="HoyolabException">api请求返回值不为零时抛出异常</exception>
-    private async Task<List<WishlogItem>> GetWishlogByTypeAsync(string baseString, WishType queryType, long lastId = 0, int size = 20)
+    private async Task<List<WishlogItem>> GetWishlogByTypeAsync(string baseString, WishType queryType, long lastId = 0, int size = 20, IProgress<(WishType WishType, int Page)>? progress = null)
     {
         var param = new QueryParam(queryType, 1, size);
         var result = new List<WishlogItem>();
         while (true)
         {
-            ProgressChanged?.Invoke(this, (queryType, param.Page));
+            progress?.Report((queryType, param.Page));
             var list = await GetWishlogByParamAsync(baseString, param);
             result.AddRange(list);
             if (list.Count == size && list.Last().Id > lastId)
@@ -169,16 +165,16 @@ public class WishlogClient
     /// <param name="lastId"></param>
     /// <param name="size">一次获取几条记录，[1,20]</param>
     /// <returns>以 id 顺序排列，没有数据返回空集合</returns>
-    public async Task<List<WishlogItem>> GetAllWishlogAsync(string wishlogUrl, long lastId = 0, int size = 20)
+    public async Task<List<WishlogItem>> GetAllWishlogAsync(string wishlogUrl, long lastId = 0, int size = 20, IProgress<(WishType QueryType, int Page)>? progress = null)
     {
         var baseUrl = GetBaseAndAuthString(wishlogUrl);
         lastId = lastId < 0 ? 0 : lastId;
         size = Math.Clamp(size, 1, 20);
         var result = new List<WishlogItem>();
-        result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.Novice, lastId, size));
-        result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.Permanent, lastId, size));
-        result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.CharacterEvent, lastId, size));
-        result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.WeaponEvent, lastId, size));
+        result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.Novice, lastId, size, progress));
+        result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.Permanent, lastId, size, progress));
+        result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.CharacterEvent, lastId, size, progress));
+        result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.WeaponEvent, lastId, size, progress));
         return result.OrderBy(x => x.Id).ToList();
     }
 

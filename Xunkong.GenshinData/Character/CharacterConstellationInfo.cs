@@ -5,7 +5,7 @@
 /// </summary>
 public class CharacterConstellationInfo
 {
-    
+
     public int Id { get; set; }
 
     public int ConstellationId { get; set; }
