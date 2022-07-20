@@ -23,7 +23,7 @@ public class WishlogItem : IEquatable<WishlogItem>, IJsonOnSerializing, IJsonOnD
     /// 此值为空
     /// </summary>
     [JsonPropertyName("item_id")]
-    public string ItemId { get; set; }
+    public string? ItemId { get; set; }
 
     /// <summary>
     /// 物品数量（暂时都是1）

@@ -18,15 +18,13 @@ public enum ChannelType
     Development = 4,
 
 
-    StableAndPreview = 3,
+    [Description("商店版")]
+    Store = 8,
 
 
-    StableAndDevelop = 5,
+    [Description("侧载版")]
+    Sideload = 16,
 
 
-    PreviewAndDevelop = 6,
-
-
-    All = 7,
 
 }
