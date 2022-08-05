@@ -31,8 +31,8 @@ public class HoyolabClient
     private const string x_rpc_app_version = "x-rpc-app_version";
     private const string x_rpc_device_id = "x-rpc-device_id";
     private const string x_rpc_client_type = "x-rpc-client_type";
-    private const string UA2251 = @"Mozilla/5.0 miHoYoBBS/2.25.1";
-    private const string AppVersion = "2.25.1";
+    private const string UA2341 = @"Mozilla/5.0 miHoYoBBS/2.34.1";
+    private const string AppVersion = "2.34.1";
     private static readonly string DeviceId = Guid.NewGuid().ToString("D");
 
     #endregion
@@ -56,7 +56,7 @@ public class HoyolabClient
     private async Task<T> CommonSendAsync<T>(HttpRequestMessage request, CancellationToken? cancellationToken = null) where T : class
     {
         request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2251);
+        request.Headers.Add(UserAgent, UA2341);
         var response = await _httpClient.SendAsync(request, cancellationToken ?? CancellationToken.None);
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
@@ -174,7 +174,7 @@ public class HoyolabClient
         var request = new HttpRequestMessage(HttpMethod.Post, "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign");
         request.Headers.Add(Cookie, role.Cookie);
         request.Headers.Add(DS, DynamicSecret.CreateSecret());
-        request.Headers.Add(x_rpc_app_version, "2.10.1");
+        request.Headers.Add(x_rpc_app_version, AppVersion);
         request.Headers.Add(x_rpc_device_id, DeviceId);
         request.Headers.Add(x_rpc_client_type, "5");
         request.Headers.Add(X_Reuqest_With, com_mihoyo_hyperion);

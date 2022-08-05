@@ -4,11 +4,13 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.1.0</Version>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<FileVersion>1.0.0</FileVersion>
+		<Version>1.0.0</Version>
 		<Authors>Scighost</Authors>
 		<Company>Xunkong</Company>
 		<PackageProjectUrl>https://github.com/xunkong</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/xunkong/Hoyolab</RepositoryUrl>
+		<RepositoryUrl>https://github.com/xunkong/common</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>xunkong genshin</PackageTags>
 	</PropertyGroup>
