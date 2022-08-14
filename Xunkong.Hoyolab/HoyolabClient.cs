@@ -73,10 +73,6 @@ public class HoyolabClient
         {
             throw new HoyolabException(responseData.ReturnCode, responseData.Message);
         }
-        if (responseData.Data is null)
-        {
-            throw new HoyolabException(-1, "Response data is null");
-        }
         return responseData.Data;
     }
 
@@ -180,8 +176,15 @@ public class HoyolabClient
         request.Headers.Add(X_Reuqest_With, com_mihoyo_hyperion);
         request.Headers.Add(Referer, "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id=e202009291139501&utm_source=bbs&utm_medium=mys&utm_campaign=icon");
         request.Content = JsonContent.Create(obj);
-        await CommonSendAsync<JsonNode>(request, cancellationToken);
-        return true;
+        var risk = await CommonSendAsync<SignInRisk>(request, cancellationToken);
+        if (risk is null or { RiskCode: 0, Success: 0 })
+        {
+            return true;
+        }
+        else
+        {
+            throw new HoyolabException(375, $"账号 {role.Nickname} 受到风控限制，请前往米游社手动签到。");
+        }
     }
 
 
