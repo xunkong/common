@@ -16,10 +16,6 @@
 		<PackageTags>xunkong genshin</PackageTags>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$(DefineConstants.Contains(`NativeAOT`)) == true">
-		<AssemblyName>Xunkong.Hoyolab.NativeAOT</AssemblyName>
-	</PropertyGroup>
-
 	<ItemGroup>
 	  <ProjectReference Include="..\Xunkong.Core\Xunkong.Core.csproj" />
 	</ItemGroup>

@@ -31,8 +31,8 @@ public class HoyolabClient
     private const string x_rpc_app_version = "x-rpc-app_version";
     private const string x_rpc_device_id = "x-rpc-device_id";
     private const string x_rpc_client_type = "x-rpc-client_type";
-    private const string UA2350 = @"Mozilla/5.0 miHoYoBBS/2.35.0";
-    private const string AppVersion = "2.35.0";
+    private const string UAContent = $"Mozilla/5.0 miHoYoBBS/{AppVersion}";
+    private const string AppVersion = "2.34.1";
     private static readonly string DeviceId = Guid.NewGuid().ToString("D");
 
     #endregion
@@ -56,14 +56,14 @@ public class HoyolabClient
     private async Task<T> CommonSendAsync<T>(HttpRequestMessage request, CancellationToken? cancellationToken = null) where T : class
     {
         request.Headers.Add(Accept, Application_Json);
-        request.Headers.Add(UserAgent, UA2350);
+        request.Headers.Add(UserAgent, UAContent);
         var response = await _httpClient.SendAsync(request, cancellationToken ?? CancellationToken.None);
         response.EnsureSuccessStatusCode();
+#if DEBUG
         var content = await response.Content.ReadAsStringAsync();
-#if NativeAOT
-        var responseData = await JsonSerializer.DeserializeAsync(await response.Content.ReadAsStreamAsync(), typeof(HoyolabBaseWrapper<T>), HoyolabJsonContext.Default) as HoyolabBaseWrapper<T>;
+        var responseData = JsonSerializer.Deserialize<HoyolabBaseWrapper<T>>(content);
 #else
-        var responseData = await JsonSerializer.DeserializeAsync<HoyolabBaseWrapper<T>>(await response.Content.ReadAsStreamAsync());
+        var responseData = await response.Content.ReadFromJsonAsync<HoyolabBaseWrapper<T>>();
 #endif
         if (responseData is null)
         {
@@ -183,7 +183,7 @@ public class HoyolabClient
         }
         else
         {
-            throw new HoyolabException(375, $"账号 {role.Nickname} 受到风控限制，请前往米游社手动签到。");
+            throw new HoyolabException(risk.RiskCode, $"账号 {role.Nickname} 受到风控限制，请前往米游社手动签到。");
         }
     }
 

@@ -20,6 +20,7 @@ namespace Xunkong.Hoyolab;
 [JsonSerializable(typeof(HoyolabBaseWrapper<GenshinRoleInfoWrapper>))]
 [JsonSerializable(typeof(HoyolabBaseWrapper<GenshinRoleInfo>))]
 [JsonSerializable(typeof(HoyolabBaseWrapper<SignInInfo>))]
+[JsonSerializable(typeof(HoyolabBaseWrapper<SignInRisk>))]
 [JsonSerializable(typeof(HoyolabBaseWrapper<GameRecordSummary>))]
 [JsonSerializable(typeof(HoyolabBaseWrapper<AvatarInfo>))]
 [JsonSerializable(typeof(HoyolabBaseWrapper<PlayerRiskStats>))]
