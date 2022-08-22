@@ -32,7 +32,7 @@ public class HoyolabClient
     private const string x_rpc_device_id = "x-rpc-device_id";
     private const string x_rpc_client_type = "x-rpc-client_type";
     private const string UAContent = $"Mozilla/5.0 miHoYoBBS/{AppVersion}";
-    private const string AppVersion = "2.34.1";
+    private const string AppVersion = "2.35.2";
     private static readonly string DeviceId = Guid.NewGuid().ToString("D");
 
     #endregion
@@ -158,13 +158,17 @@ public class HoyolabClient
     /// 进行签到
     /// </summary>
     /// <param name="role"></param>
+    /// <param name="skipCheckWhetherHaveSignedIn">跳过检查是否已经签到</param>
     /// <returns>true 签到成功，false 无需签到</returns>
-    public async Task<bool> SignInAsync(GenshinRoleInfo role, CancellationToken? cancellationToken = null)
+    public async Task<bool> SignInAsync(GenshinRoleInfo role, bool skipCheckWhetherHaveSignedIn = false, CancellationToken? cancellationToken = null)
     {
-        var signInfo = await GetSignInInfoAsync(role, cancellationToken);
-        if (signInfo.IsSign)
+        if (!skipCheckWhetherHaveSignedIn)
         {
-            return false;
+            var signInfo = await GetSignInInfoAsync(role, cancellationToken);
+            if (signInfo.IsSign)
+            {
+                return false;
+            }
         }
         var obj = new { act_id = "e202009291139501", region = role.Region.ToString(), uid = role.Uid.ToString() };
         var request = new HttpRequestMessage(HttpMethod.Post, "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign");
