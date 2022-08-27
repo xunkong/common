@@ -77,7 +77,7 @@ public class WishlogClient
     /// <exception cref="HoyolabException"></exception>
     private static string GetBaseAndAuthString(string wishlogUrl)
     {
-        var match = Regex.Match(wishlogUrl, @"(https://webstatic.+#/log)");
+        var match = Regex.Match(wishlogUrl, @"(https://webstatic.+)");
         if (!match.Success)
         {
             throw new HoyolabException(-1, "Url does not fit the requirement.");
