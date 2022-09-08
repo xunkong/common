@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Xunkong.Hoyolab.Wishlog;
@@ -11,7 +12,7 @@ public class WishlogClient
 
     private const string CnUrl = "https://hk4e-api.mihoyo.com/event/gacha_info/api/getGachaLog";
 
-    private const string SeaUrl = "https://hk4e-api-os.mihoyo.com/event/gacha_info/api/getGachaLog";
+    private const string SeaUrl = "https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog";
 
     private static readonly string UserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
@@ -67,6 +68,46 @@ public class WishlogClient
             throw new FileNotFoundException("Cannot find wishlog url from log file of Genshin Impact.");
         }
     }
+
+
+
+    /// <summary>
+    /// 从原神的浏览器缓存文件获取祈愿记录网址
+    /// </summary>
+    /// <param name="exePath">原神游戏本体 exe 路径</param>
+    /// <returns></returns>
+    public static string? GetWishlogUrlFromCacheFile(string exePath)
+    {
+        string? file = null;
+        var match = ReadOnlySpan<byte>.Empty;
+        if (exePath.EndsWith("YuanShen.exe"))
+        {
+            file = Path.Combine(Path.GetDirectoryName(exePath)!, @"YuanShen_Data\webCaches\Cache\Cache_Data\data_2");
+            match = "https://webstatic.mihoyo.com/hk4e/event/e20190909gacha-v2/index.html"u8;
+        }
+        if (exePath.EndsWith("GenshinImpact.exe"))
+        {
+            file = Path.Combine(Path.GetDirectoryName(exePath)!, @"GenshinImpact_Data\webCaches\Cache\Cache_Data\data_2");
+            match = "https://webstatic-sea.hoyoverse.com/genshin/event/e20190909gacha-v2/index.html"u8;
+        }
+        if (File.Exists(file))
+        {
+            using var fs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            var ms = new MemoryStream();
+            fs.CopyTo(ms);
+            var span = ms.ToArray().AsSpan();
+            var index = span.LastIndexOf(match);
+            if (index >= 0)
+            {
+                var length = span[index..].IndexOf("\0"u8);
+                return Encoding.UTF8.GetString(span.Slice(index, length));
+            }
+        }
+        return null;
+    }
+
+
+
 
 
     /// <summary>
