@@ -7,7 +7,7 @@ using Xunkong.Hoyolab.GameRecord;
 using Xunkong.Hoyolab.News;
 using Xunkong.Hoyolab.SpiralAbyss;
 using Xunkong.Hoyolab.TravelNotes;
-using Xunkong.Hoyolab.Wiki;
+using Xunkong.Hoyolab.Activity;
 
 namespace Xunkong.Hoyolab;
 
@@ -432,13 +432,13 @@ public class HoyolabClient
 
 
     /// <summary>
-    /// 天赋日历
+    /// 日历
     /// </summary>
     /// <returns></returns>
-    public async Task<List<TalentCalendar>> GetTalentCalenarsListAsync()
+    public async Task<List<CalendarInfo>> GetCalendarInfosAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "https://api-static.mihoyo.com/common/blackboard/ys_obc/v1/get_activity_calendar?app_sn=ys_obc");
-        var data = await CommonSendAsync<ListWrapper<TalentCalendar>>(request);
+        var data = await CommonSendAsync<ListWrapper<CalendarInfo>>(request);
         return data.List.Where(x => x.Kind == "2").ToList();
     }
 
@@ -447,23 +447,52 @@ public class HoyolabClient
     /// 近期活动
     /// </summary>
     /// <returns></returns>
-    public async Task<(List<Activity> Activities, List<Activity> Strategies)> GetGameActivitiesListAsync()
+    public async Task<(List<ActivityInfo> Activities, List<ActivityInfo> Strategies)> GetGameActivitiesListAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "https://api-static.mihoyo.com/common/blackboard/ys_obc/v1/home/recommend/list?app_sn=ys_obc&position_id=48");
         var node = await CommonSendAsync<JsonNode>(request);
-        List<Activity> activities = new();
-        List<Activity> strategies = new();
+        List<ActivityInfo> activities = new();
+        List<ActivityInfo> strategies = new();
         if (node["list"]?[0]?["children"]?[0]?["children"]?[0]?["list"] is JsonArray array1)
         {
-            activities = array1.Deserialize<List<Activity>>() ?? new List<Activity>();
+            activities = array1.Deserialize<List<ActivityInfo>>() ?? new List<ActivityInfo>();
         }
         if (node["list"]?[0]?["children"]?[0]?["children"]?[1]?["list"] is JsonArray array2)
         {
-            strategies = array2.Deserialize<List<Activity>>() ?? new List<Activity>();
+            strategies = array2.Deserialize<List<ActivityInfo>>() ?? new List<ActivityInfo>();
         }
         return (activities ?? new(), strategies ?? new());
     }
 
+
+    /// <summary>
+    /// 游戏内公告
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<Announcement>> GetGameAnnouncementsAsync()
+    {
+        var url1 = $"https://hk4e-api.mihoyo.com/common/hk4e_cn/announcement/api/getAnnList?game=hk4e&game_biz=hk4e_cn&lang=zh-cn&auth_appid=announcement&authkey_ver=1&bundle_id=hk4e_cn&channel_id=1&level=60&platform=pc&region=cn_gf01&sdk_presentation_style=fullscreen&sdk_screen_transparent=true&sign_type=2&uid=123456789";
+        var url2 = $"https://hk4e-api-static.mihoyo.com/common/hk4e_cn/announcement/api/getAnnContent?game=hk4e&game_biz=hk4e_cn&lang=zh-cn&bundle_id=hk4e_cn&platform=pc&region=cn_gf01&t={DateTimeOffset.Now.ToUnixTimeSeconds()}&level=60&channel_id=1";
+        var request1 = new HttpRequestMessage(HttpMethod.Get, url1);
+        var node1 = await CommonSendAsync<JsonNode>(request1);
+        var announces = node1?["list"]?[1]?["list"].Deserialize<List<Announcement>>() ?? new List<Announcement>();
+        announces.AddRange(node1?["list"]?[0]?["list"].Deserialize<List<Announcement>>() ?? new List<Announcement>());
+        var request2 = new HttpRequestMessage(HttpMethod.Get, url2);
+        var node2 = await CommonSendAsync<JsonNode>(request2);
+        var content = node2?["list"].Deserialize<List<AnnouncementContent>>() ?? new List<AnnouncementContent>();
+        foreach (var announce in announces)
+        {
+            if (string.IsNullOrWhiteSpace(announce.Banner))
+            {
+                announce.Banner = null;
+            }
+            if (content.FirstOrDefault(x => x.AnnId == announce.AnnId) is AnnouncementContent c)
+            {
+                announce.Content = c.Content;
+            }
+        }
+        return announces;
+    }
 
 
 

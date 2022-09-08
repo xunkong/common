@@ -1,15 +1,15 @@
-﻿namespace Xunkong.Hoyolab.Wiki;
+﻿namespace Xunkong.Hoyolab.Activity;
 
-public class TalentCalendar
+public class CalendarInfo
 {
     /// <summary>
-    /// 角色名
+    /// 角色名，武器名，活动名
     /// </summary>
     [JsonPropertyName("title")]
     public string Title { get; set; }
 
     /// <summary>
-    /// 0：角色生日，2：天赋材料
+    /// 1: 活动，2：天赋武器材料，4：角色生日
     /// </summary>
     [JsonPropertyName("kind")]
     public string Kind { get; set; }
@@ -32,9 +32,15 @@ public class TalentCalendar
     [JsonPropertyName("style")]
     public string Style { get; set; }
 
+    /// <summary>
+    /// 活动开始时间戳
+    /// </summary>
     [JsonPropertyName("start_time")]
     public string StartTime { get; set; }
 
+    /// <summary>
+    /// 活动结束直接戳
+    /// </summary>
     [JsonPropertyName("end_time")]
     public string EndTime { get; set; }
 
@@ -45,7 +51,7 @@ public class TalentCalendar
     public string PaddingColor { get; set; }
 
     /// <summary>
-    /// 周几开放
+    /// 周几开放，1~7
     /// </summary>
     [JsonPropertyName("drop_day")]
     public List<string> DropDay { get; set; }

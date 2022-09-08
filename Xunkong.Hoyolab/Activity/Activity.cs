@@ -1,9 +1,9 @@
-﻿namespace Xunkong.Hoyolab.Wiki;
+﻿namespace Xunkong.Hoyolab.Activity;
 
 /// <summary>
 /// 活动
 /// </summary>
-public class Activity
+public class ActivityInfo
 {
 
     [JsonPropertyName("recommend_id")]
