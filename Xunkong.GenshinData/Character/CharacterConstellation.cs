@@ -3,18 +3,16 @@
 /// <summary>
 /// 命之座
 /// </summary>
-public class CharacterConstellationInfo
+public class CharacterConstellation
 {
-
-    public int Id { get; set; }
 
     public int ConstellationId { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
-    public string? Description { get; set; }
+    public string Description { get; set; }
 
-    public string? Icon { get; set; }
+    public string Icon { get; set; }
 
     /// <summary>
     /// 上一个命星的id
