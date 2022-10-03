@@ -35,4 +35,7 @@ public class AchievementItem
     /// 完成此成就所需条件的数值
     /// </summary>
     public int Progress { get; set; }
+
+
+    public string Version { get; set; }
 }
