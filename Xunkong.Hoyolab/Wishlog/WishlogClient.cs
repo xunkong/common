@@ -44,6 +44,7 @@ public class WishlogClient
     /// <param name="isSea">是否外服优先</param>
     /// <returns></returns>
     /// <exception cref="FileNotFoundException">没有找到日志文件，或没有从日志文件中找到祈愿记录网址</exception>
+    [Obsolete("日志文件中不再有链接", true)]
     public static async Task<string> GetWishlogUrlFromLogFileAsync(bool isSea = false)
     {
         var file = isSea ? LogFile_Sea : LogFile_Cn;
@@ -118,21 +119,31 @@ public class WishlogClient
     /// <exception cref="HoyolabException"></exception>
     private static string GetBaseAndAuthString(string wishlogUrl)
     {
-        var match = Regex.Match(wishlogUrl, @"(https://webstatic.+)");
-        if (!match.Success)
+        var match = Regex.Match(wishlogUrl, @"(https://webstatic[!-z]+)");
+        if (match.Success)
         {
-            throw new HoyolabException(-1, "Url does not fit the requirement.");
+            wishlogUrl = match.Groups[1].Value;
+            var auth = wishlogUrl.Substring(wishlogUrl.IndexOf('?')).Replace("#/log", "");
+            if (wishlogUrl.Contains("webstatic-sea"))
+            {
+                return SeaUrl + auth;
+            }
+            else
+            {
+                return CnUrl + auth;
+            }
         }
-        wishlogUrl = match.Groups[1].Value;
-        var auth = wishlogUrl.Substring(wishlogUrl.IndexOf('?')).Replace("#/log", "");
-        if (wishlogUrl.Contains("webstatic-sea"))
+        match = Regex.Match(wishlogUrl, @"(https://hk4e-api[!-z]+)");
+        if (match.Success)
         {
-            return SeaUrl + auth;
+            wishlogUrl = match.Groups[1].Value;
+            wishlogUrl = Regex.Replace(wishlogUrl, @"&gacha_type=\d", "");
+            wishlogUrl = Regex.Replace(wishlogUrl, @"&page=\d", "");
+            wishlogUrl = Regex.Replace(wishlogUrl, @"&size=\d", "");
+            wishlogUrl = Regex.Replace(wishlogUrl, @"&end_id=\d", "");
+            return wishlogUrl;
         }
-        else
-        {
-            return CnUrl + auth;
-        }
+        throw new HoyolabException(-1, "Url does not fit the requirement.");
     }
 
 

@@ -11,6 +11,9 @@ public class Cutscene
     public string Chapter { get; set; }
 
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+    public int Type { get; set; }
+
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public int Player { get; set; }
 
     [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
