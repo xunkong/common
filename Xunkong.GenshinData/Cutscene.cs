@@ -26,4 +26,6 @@ public class Cutscene
 
     public string Source { get; set; }
 
+    public string? Comment { get; set; }
+
 }
