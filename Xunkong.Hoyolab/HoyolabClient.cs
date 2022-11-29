@@ -83,16 +83,11 @@ public class HoyolabClient
     /// <param name="cookie"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException">输入的 <c>cookie</c> 为空</exception>
-    /// <exception cref="ArgumentException"><c>cookie</c> 中不包含 account_id 或 cookie_token</exception>
     public async Task<HoyolabUserInfo> GetHoyolabUserInfoAsync(string cookie, CancellationToken? cancellationToken = null)
     {
         if (string.IsNullOrWhiteSpace(cookie))
         {
             throw new ArgumentNullException(nameof(cookie));
-        }
-        if (!(cookie.Contains("account_id") && cookie.Contains("cookie_token")))
-        {
-            throw new ArgumentException(@"Cookie does not contain ""account_id"" or ""cookie_token"".");
         }
         var request = new HttpRequestMessage(HttpMethod.Get, "https://bbs-api.mihoyo.com/user/wapi/getUserFullInfo?gids=2");
         request.Headers.Add(Cookie, cookie);
@@ -113,16 +108,11 @@ public class HoyolabClient
     /// <param name="cookie"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException">输入的 <c>cookie</c> 为空</exception>
-    /// <exception cref="ArgumentException"><c>cookie</c> 中不包含 account_id 或 cookie_token</exception>
     public async Task<List<GenshinRoleInfo>> GetGenshinRoleInfosAsync(string cookie, CancellationToken? cancellationToken = null)
     {
         if (string.IsNullOrWhiteSpace(cookie))
         {
             throw new ArgumentNullException(nameof(cookie));
-        }
-        if (!(cookie.Contains("account_id") && cookie.Contains("cookie_token")))
-        {
-            throw new ArgumentException(@"Cookie does not contain ""account_id"" or ""cookie_token"".");
         }
         var url = "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
