@@ -1,13 +1,13 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 using Xunkong.Hoyolab.Account;
+using Xunkong.Hoyolab.Activity;
 using Xunkong.Hoyolab.Avatar;
 using Xunkong.Hoyolab.DailyNote;
 using Xunkong.Hoyolab.GameRecord;
 using Xunkong.Hoyolab.News;
 using Xunkong.Hoyolab.SpiralAbyss;
 using Xunkong.Hoyolab.TravelNotes;
-using Xunkong.Hoyolab.Activity;
 
 namespace Xunkong.Hoyolab;
 
@@ -32,7 +32,7 @@ public class HoyolabClient
     private const string x_rpc_device_id = "x-rpc-device_id";
     private const string x_rpc_client_type = "x-rpc-client_type";
     private const string UAContent = $"Mozilla/5.0 miHoYoBBS/{AppVersion}";
-    private const string AppVersion = "2.35.2";
+    private const string AppVersion = "2.43.1";
     private static readonly string DeviceId = Guid.NewGuid().ToString("D");
 
     #endregion
