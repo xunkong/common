@@ -27,6 +27,8 @@ public class WorldExploration
     [JsonPropertyName("exploration_percentage")]
     public int ExplorationPercentage { get; set; }
 
+    public string ExplorationString => ((double)ExplorationPercentage / 1000).ToString("P1");
+
     /// <summary>
     /// 地区卡片背景图
     /// <see href="https://upload-bbs.mihoyo.com/game_record/genshin/city_icon/UI_ChapterBackground_Liyue.png" />
