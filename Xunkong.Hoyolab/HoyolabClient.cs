@@ -32,7 +32,7 @@ public class HoyolabClient
     private const string x_rpc_device_id = "x-rpc-device_id";
     private const string x_rpc_client_type = "x-rpc-client_type";
     private const string UAContent = $"Mozilla/5.0 miHoYoBBS/{AppVersion}";
-    private const string AppVersion = "2.43.1";
+    private const string AppVersion = "2.47.1";
     private static readonly string DeviceId = Guid.NewGuid().ToString("D");
 
     #endregion
