@@ -77,6 +77,14 @@ public class HoyolabClient
     }
 
 
+
+    private async Task CommonSendAsync(HttpRequestMessage request, CancellationToken? cancellationToken = null)
+    {
+        await CommonSendAsync<object>(request, cancellationToken ?? CancellationToken.None);
+        return;
+    }
+
+
     /// <summary>
     /// 米游社账号信息
     /// </summary>
@@ -486,6 +494,80 @@ public class HoyolabClient
 
 
 
+    /// <summary>
+    /// 留影叙佳期，今日生日
+    /// </summary>
+    /// <param name="role"></param>
+    /// <returns></returns>
+    public async Task<BirthdayStarIndex> GetBirthdayStarIndexAsync(GenshinRoleInfo role)
+    {
+        var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/index?badge_uid={role.Uid}&badge_region={role.Region}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521";
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        return await CommonSendAsync<BirthdayStarIndex>(request);
+    }
+
+
+    /// <summary>
+    /// 留影叙佳期相册翻页
+    /// </summary>
+    /// <param name="role"></param>
+    /// <param name="isCollect">收藏的相片</param>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    public async Task<BirthdayStarDrawCollection> GetBirthdayStarDrawCollectionAsync(GenshinRoleInfo role, bool isCollect, int page = 0)
+    {
+        var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/draw_collection?badge_uid={role.Uid}&badge_region={role.Region}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521&page_size=2&draw_collection_type={(isCollect ? 1 : 0)}&draw_collection_operate={(page == 0 ? "default" : $"page&page={page}&current_time={DateTimeOffset.UtcNow.AddHours(8):yyyy-MM}")}";
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        return await CommonSendAsync<BirthdayStarDrawCollection>(request);
+    }
+
+
+    /// <summary>
+    /// 留影叙佳期相册翻页
+    /// </summary>
+    /// <param name="role"></param>
+    /// <param name="year"></param>
+    /// <param name="month"></param>
+    /// <returns></returns>
+    public async Task<BirthdayStarDrawCollection> GetBirthdayStarDrawCollectionAsync(GenshinRoleInfo role, int year, int month)
+    {
+        var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/draw_collection?badge_uid={role.Uid}&badge_region={role.Region}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521&page_size=2&draw_collection_type=0&draw_collection_operate=month&month={month}&year={year}";
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        return await CommonSendAsync<BirthdayStarDrawCollection>(request);
+    }
+
+
+
+    /// <summary>
+    /// 留影叙佳期收藏相片
+    /// </summary>
+    /// <param name="role"></param>
+    /// <param name="year"></param>
+    /// <param name="characterId"></param>
+    /// <returns></returns>
+    public async Task BirthdayStarCollectDrawAsync(GenshinRoleInfo role, int year, int characterId)
+    {
+        var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/collect_draw?badge_uid={role.Uid}&badge_region={role.RegionName}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521";
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
+        request.Content = JsonContent.Create(new { role_id = characterId, year });
+        await CommonSendAsync(request);
+    }
+
+
+
+    /// <summary>
+    /// 留影叙佳期取消收藏相片
+    /// </summary>
+    /// <param name="role"></param>
+    /// <param name="year"></param>
+    /// <param name="characterId"></param>
+    /// <returns></returns>
+    public async Task BirthdayStarCancelCollectDrawAsync(GenshinRoleInfo role, int year, int characterId)
+    {
+        var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/cancel_collect?badge_uid={role.Uid}&badge_region={role.RegionName}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521&role_id={characterId}&year={year}";
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
+        await CommonSendAsync(request);
+    }
 
 
 }
