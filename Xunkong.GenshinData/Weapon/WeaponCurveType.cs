@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Xunkong.GenshinData.Weapon;
+﻿namespace Xunkong.GenshinData.Weapon;
 
 public static class WeaponCurveType
 {

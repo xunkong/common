@@ -87,6 +87,6 @@ public static class CharacterLevelList
     }.AsReadOnly();
 
 
-   
+
 
 }

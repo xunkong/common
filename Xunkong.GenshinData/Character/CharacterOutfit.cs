@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Xunkong.GenshinData.Character;
+﻿namespace Xunkong.GenshinData.Character;
 
 /// <summary>
 /// 角色衣装

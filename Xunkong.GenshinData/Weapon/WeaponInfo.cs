@@ -1,6 +1,4 @@
-﻿using Xunkong.GenshinData.Character;
-
-namespace Xunkong.GenshinData.Weapon;
+﻿namespace Xunkong.GenshinData.Weapon;
 
 public class WeaponInfo
 {
