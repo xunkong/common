@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 using Xunkong.Hoyolab.Account;
 using Xunkong.Hoyolab.Activity;
@@ -493,6 +494,53 @@ public class HoyolabClient
     }
 
 
+    private async Task GetWebLoginInfoCookieAsync(GenshinRoleInfo role)
+    {
+        var cookies = new Dictionary<string, string>();
+        var cookiePairs = role.Cookie!.Split(';');
+        foreach (var cookiePair in cookiePairs)
+        {
+            var keyValue = cookiePair.Split('=');
+            if (keyValue.Length == 2)
+            {
+                cookies[keyValue[0].Trim()] = keyValue[1].Trim();
+            }
+        }
+        HttpRequestMessage request;
+        if (cookies.ContainsKey("e_hk4e_token"))
+        {
+            var url = $"https://api-takumi.mihoyo.com/common/badge/v1/login/info?game_biz=hk4e_cn&lang=zh-cn&ts={DateTimeOffset.Now.ToUnixTimeMilliseconds()}";
+            request = new HttpRequestMessage(HttpMethod.Get, url);
+        }
+        else
+        {
+            var url = $"https://api-takumi.mihoyo.com/common/badge/v1/login/account?game_biz=hk4e_cn&lang=zh-cn&ts={DateTimeOffset.Now.ToUnixTimeMilliseconds()}";
+            request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Content = JsonContent.Create(new { game_biz = role.GameBiz, lang = "zh-cn", region = role.Region.ToString(), uid = role.Uid.ToString() });
+
+        }
+        request.Headers.Add(Cookie, role.Cookie);
+        request.Headers.Add("Origin", "https://webstatic.mihoyo.com");
+        request.Headers.Add(Referer, "https://webstatic.mihoyo.com/");
+        request.Headers.Add(UserAgent, UAContent);
+
+        var response = await _httpClient.SendAsync(request);
+        if (response.Headers.TryGetValues("Set-Cookie", out var vlues))
+        {
+            foreach (var item in vlues)
+            {
+                var index1 = item.IndexOf('=');
+                var index2 = item.IndexOf(";");
+                var key = item.Substring(0, index1);
+                var value = item.Substring(index1 + 1, index2 - index1 - 1);
+                cookies[key] = value;
+            }
+        }
+
+        role.Cookie = string.Join("; ", cookies.Select(x => $"{x.Key}={x.Value}"));
+    }
+
+
 
     /// <summary>
     /// 留影叙佳期，今日生日
@@ -501,8 +549,12 @@ public class HoyolabClient
     /// <returns></returns>
     public async Task<BirthdayStarIndex> GetBirthdayStarIndexAsync(GenshinRoleInfo role)
     {
+        await GetWebLoginInfoCookieAsync(role);
         var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/index?badge_uid={role.Uid}&badge_region={role.Region}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.Add(Cookie, role.Cookie);
+        request.Headers.Add("Origin", "https://webstatic.mihoyo.com");
+        request.Headers.Add(Referer, "https://webstatic.mihoyo.com/");
         return await CommonSendAsync<BirthdayStarIndex>(request);
     }
 
@@ -516,8 +568,11 @@ public class HoyolabClient
     /// <returns></returns>
     public async Task<BirthdayStarDrawCollection> GetBirthdayStarDrawCollectionAsync(GenshinRoleInfo role, bool isCollect, int page = 0)
     {
+        await GetWebLoginInfoCookieAsync(role);
         var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/draw_collection?badge_uid={role.Uid}&badge_region={role.Region}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521&page_size=2&draw_collection_type={(isCollect ? 1 : 0)}&draw_collection_operate={(page == 0 ? "default" : $"page&page={page}&current_time={DateTimeOffset.UtcNow.AddHours(8):yyyy-MM}")}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.Add(Cookie, role.Cookie);
+        request.Headers.Add(Referer, "https://webstatic.mihoyo.com/");
         return await CommonSendAsync<BirthdayStarDrawCollection>(request);
     }
 
@@ -531,8 +586,11 @@ public class HoyolabClient
     /// <returns></returns>
     public async Task<BirthdayStarDrawCollection> GetBirthdayStarDrawCollectionAsync(GenshinRoleInfo role, int year, int month)
     {
+        await GetWebLoginInfoCookieAsync(role);
         var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/draw_collection?badge_uid={role.Uid}&badge_region={role.Region}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521&page_size=2&draw_collection_type=0&draw_collection_operate=month&month={month}&year={year}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.Add(Cookie, role.Cookie);
+        request.Headers.Add(Referer, "https://webstatic.mihoyo.com/");
         return await CommonSendAsync<BirthdayStarDrawCollection>(request);
     }
 
@@ -547,8 +605,11 @@ public class HoyolabClient
     /// <returns></returns>
     public async Task BirthdayStarCollectDrawAsync(GenshinRoleInfo role, int year, int characterId)
     {
+        await GetWebLoginInfoCookieAsync(role);
         var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/collect_draw?badge_uid={role.Uid}&badge_region={role.RegionName}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521";
         var request = new HttpRequestMessage(HttpMethod.Post, url);
+        request.Headers.Add(Cookie, role.Cookie);
+        request.Headers.Add(Referer, "https://webstatic.mihoyo.com/");
         request.Content = JsonContent.Create(new { role_id = characterId, year });
         await CommonSendAsync(request);
     }
@@ -564,8 +625,11 @@ public class HoyolabClient
     /// <returns></returns>
     public async Task BirthdayStarCancelCollectDrawAsync(GenshinRoleInfo role, int year, int characterId)
     {
+        await GetWebLoginInfoCookieAsync(role);
         var url = $"https://hk4e-api.mihoyo.com/event/birthdaystar/account/cancel_collect?badge_uid={role.Uid}&badge_region={role.RegionName}&game_biz=hk4e_cn&lang=zh-cn&activity_id=20220301153521&role_id={characterId}&year={year}";
         var request = new HttpRequestMessage(HttpMethod.Post, url);
+        request.Headers.Add(Cookie, role.Cookie);
+        request.Headers.Add(Referer, "https://webstatic.mihoyo.com/");
         await CommonSendAsync(request);
     }
 
