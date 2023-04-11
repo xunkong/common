@@ -31,12 +31,12 @@ public class MaterialItem
     /// <summary>
     /// 材料类型 <see cref="Material.MaterialType"/>
     /// </summary>
-    public string MaterialType { get; set; }
+    public string? MaterialType { get; set; }
 
     /// <summary>
     /// 材料类型说明
     /// </summary>
-    public string TypeDescription { get; set; }
+    public string? TypeDescription { get; set; }
 
     /// <summary>
     /// 星级
