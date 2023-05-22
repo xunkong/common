@@ -496,6 +496,9 @@ public class HoyolabClient
 
     private async Task GetWebLoginInfoCookieAsync(GenshinRoleInfo role)
     {
+        // https://webapi.account.mihoyo.com/Api/fetch_cookie_accountinfo?t=1681551117167
+        // https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookieToken?game_biz=hk4e_cn
+
         var cookies = new Dictionary<string, string>();
         var cookiePairs = role.Cookie!.Split(';');
         foreach (var cookiePair in cookiePairs)
@@ -514,7 +517,7 @@ public class HoyolabClient
         }
         else
         {
-            var url = $"https://api-takumi.mihoyo.com/common/badge/v1/login/account?game_biz=hk4e_cn&lang=zh-cn&ts={DateTimeOffset.Now.ToUnixTimeMilliseconds()}";
+            var url = $"https://api-takumi.mihoyo.com/common/badge/v1/login/account";
             request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Content = JsonContent.Create(new { game_biz = role.GameBiz, lang = "zh-cn", region = role.Region.ToString(), uid = role.Uid.ToString() });
 
