@@ -83,12 +83,12 @@ public class WishlogClient
         var match = ReadOnlySpan<byte>.Empty;
         if (exePath.EndsWith("YuanShen.exe"))
         {
-            file = Path.Combine(Path.GetDirectoryName(exePath)!, @"YuanShen_Data\webCaches\Cache\Cache_Data\data_2");
+            file = Path.Combine(Path.GetDirectoryName(exePath)!, @"YuanShen_Data\webCaches\2.13.0.1\Cache\Cache_Data\data_2");
             match = "https://webstatic.mihoyo.com/hk4e/event/e20190909gacha-v2/index.html"u8;
         }
         if (exePath.EndsWith("GenshinImpact.exe"))
         {
-            file = Path.Combine(Path.GetDirectoryName(exePath)!, @"GenshinImpact_Data\webCaches\Cache\Cache_Data\data_2");
+            file = Path.Combine(Path.GetDirectoryName(exePath)!, @"GenshinImpact_Data\webCaches\2.13.0.1\Cache\Cache_Data\data_2");
             match = "https://webstatic-sea.hoyoverse.com/genshin/event/e20190909gacha-v2/index.html"u8;
         }
         if (File.Exists(file))
