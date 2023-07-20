@@ -1,4 +1,6 @@
-﻿using System.Net.Http.Json;
+﻿using Microsoft.Extensions.FileSystemGlobbing;
+using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -83,12 +85,22 @@ public class WishlogClient
         var match = ReadOnlySpan<byte>.Empty;
         if (exePath.EndsWith("YuanShen.exe"))
         {
-            file = Path.Combine(Path.GetDirectoryName(exePath)!, @"YuanShen_Data\webCaches\2.13.0.1\Cache\Cache_Data\data_2");
+            var matcher = new Matcher();
+            matcher.AddInclude(@"YuanShen_Data\webCaches\Cache\Cache_Data\data_2");
+            matcher.AddInclude(@"YuanShen_Data\webCaches\*\Cache\Cache_Data\data_2");
+            var result = matcher.Execute(new DirectoryInfoWrapper(new FileInfo(exePath).Directory!));
+            var files = result.Files.Select(x => Path.Combine(Path.GetDirectoryName(exePath)!, x.Path));
+            file = files.OrderByDescending(x => new FileInfo(x).LastWriteTime).FirstOrDefault();
             match = "https://webstatic.mihoyo.com/hk4e/event/e20190909gacha-v2/index.html"u8;
         }
         if (exePath.EndsWith("GenshinImpact.exe"))
         {
-            file = Path.Combine(Path.GetDirectoryName(exePath)!, @"GenshinImpact_Data\webCaches\2.13.0.1\Cache\Cache_Data\data_2");
+            var matcher = new Matcher();
+            matcher.AddInclude(@"GenshinImpact_Data\webCaches\Cache\Cache_Data\data_2");
+            matcher.AddInclude(@"GenshinImpact_Data\webCaches\*\Cache\Cache_Data\data_2");
+            var result = matcher.Execute(new DirectoryInfoWrapper(new FileInfo(exePath).Directory!));
+            var files = result.Files.Select(x => Path.Combine(Path.GetDirectoryName(exePath)!, x.Path));
+            file = files.OrderByDescending(x => new FileInfo(x).LastWriteTime).FirstOrDefault();
             match = "https://webstatic-sea.hoyoverse.com/genshin/event/e20190909gacha-v2/index.html"u8;
         }
         if (File.Exists(file))
