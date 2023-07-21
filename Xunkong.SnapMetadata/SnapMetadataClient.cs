@@ -19,6 +19,12 @@ public class SnapMetadataClient
     private static JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
 
+    public async Task<SnapMeta> GetSnapMetaAsync()
+    {
+        const string url = "https://hutao-metadata2.snapgenshin.com/Genshin/CHS/Meta.json";
+        return await _httpClient.GetFromJsonAsync<SnapMeta>(url, JsonSerializerOptions);
+    }
+
 
     public async Task<List<SnapAvatarInfo>> GetAvatarInfosAsync()
     {
@@ -40,6 +46,21 @@ public class SnapMetadataClient
     {
         const string url = "https://hutao-metadata2.snapgenshin.com/Genshin/CHS/GachaEvent.json";
         return await _httpClient.GetFromJsonAsync<List<SnapGachaEventInfo>>(url, JsonSerializerOptions);
+    }
+
+
+
+    public async Task<List<SnapAchievementItem>> GetAchievementItemsAsync()
+    {
+        const string url = "https://hutao-metadata2.snapgenshin.com/Genshin/CHS/Achievement.json";
+        return await _httpClient.GetFromJsonAsync<List<SnapAchievementItem>>(url, JsonSerializerOptions);
+    }
+
+
+    public async Task<List<SnapAchievementGoal>> GetAchievementGoalsAsync()
+    {
+        const string url = "https://hutao-metadata2.snapgenshin.com/Genshin/CHS/AchievementGoal.json";
+        return await _httpClient.GetFromJsonAsync<List<SnapAchievementGoal>>(url, JsonSerializerOptions);
     }
 
 
