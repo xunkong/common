@@ -10,7 +10,7 @@ public class SnapAchievementItem
     public string Description { get; set; }
     public FinishReward FinishReward { get; set; }
     public int Progress { get; set; }
-    public int PreStageAchievementId { get; set; }
+    public int PreviousId { get; set; }
     public bool IsDeleteWatcherAfterFinish { get; set; }
 }
 
