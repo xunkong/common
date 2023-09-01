@@ -278,4 +278,19 @@ public class WishlogClient
         return 0;
     }
 
+
+
+    public async Task<WishlogItemWiki> GetWishlogItemWikiAsync(CancellationToken cancellationToken = default)
+    {
+        const string url = "https://api-takumi.mihoyo.com/event/platsimulator/config?gids=2&game=hk4e";
+        var wrapper = await _httpClient.GetFromJsonAsync<HoyolabBaseWrapper<WishlogItemWiki>>(url, cancellationToken);
+        if (wrapper is null)
+        {
+            throw new HoyolabException(-1, "Response data is null");
+        }
+        WishlogItemWiki wiki = wrapper.Data;
+        wiki.Language = "zh-cn";
+        return wiki;
+    }
+
 }
