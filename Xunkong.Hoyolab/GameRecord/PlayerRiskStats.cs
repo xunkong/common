@@ -65,6 +65,13 @@ public class PlayerRiskStats
     public int DendroculusNumber { get; set; }
 
     /// <summary>
+    /// 水神瞳
+    /// </summary>
+    [JsonPropertyName("hydroculus_number")]
+    [Description("水神瞳")]
+    public int HydroculusNumber { get; set; }
+
+    /// <summary>
     /// 解锁秘境
     /// </summary>
     [JsonPropertyName("domain_number")]
