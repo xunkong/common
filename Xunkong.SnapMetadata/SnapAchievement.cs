@@ -12,6 +12,7 @@ public class SnapAchievementItem
     public int Progress { get; set; }
     public int PreviousId { get; set; }
     public bool IsDeleteWatcherAfterFinish { get; set; }
+    public string Version { get; set; }
 }
 
 
