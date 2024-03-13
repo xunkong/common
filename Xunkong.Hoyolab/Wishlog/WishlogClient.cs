@@ -91,7 +91,7 @@ public class WishlogClient
             var result = matcher.Execute(new DirectoryInfoWrapper(new FileInfo(exePath).Directory!));
             var files = result.Files.Select(x => Path.Combine(Path.GetDirectoryName(exePath)!, x.Path));
             file = files.OrderByDescending(x => new FileInfo(x).LastWriteTime).FirstOrDefault();
-            match = "https://webstatic.mihoyo.com/hk4e/event/e20190909gacha-v2/index.html"u8;
+            match = "https://webstatic.mihoyo.com/hk4e/event/e20190909gacha-v3/index.html"u8;
         }
         if (exePath.EndsWith("GenshinImpact.exe"))
         {
@@ -101,7 +101,7 @@ public class WishlogClient
             var result = matcher.Execute(new DirectoryInfoWrapper(new FileInfo(exePath).Directory!));
             var files = result.Files.Select(x => Path.Combine(Path.GetDirectoryName(exePath)!, x.Path));
             file = files.OrderByDescending(x => new FileInfo(x).LastWriteTime).FirstOrDefault();
-            match = "https://webstatic-sea.hoyoverse.com/genshin/event/e20190909gacha-v2/index.html"u8;
+            match = "https://gs.hoyoverse.com/genshin/event/e20190909gacha-v3/index.html"u8;
         }
         if (File.Exists(file))
         {
