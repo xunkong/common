@@ -91,7 +91,7 @@ public class WishlogClient
             var result = matcher.Execute(new DirectoryInfoWrapper(new FileInfo(exePath).Directory!));
             var files = result.Files.Select(x => Path.Combine(Path.GetDirectoryName(exePath)!, x.Path));
             file = files.OrderByDescending(x => new FileInfo(x).LastWriteTime).FirstOrDefault();
-            match = "https://webstatic.mihoyo.com/hk4e/event/e20190909gacha-v2/index.html"u8;
+            match = "https://webstatic.mihoyo.com/hk4e/event/e20190909gacha-v3/index.html"u8;
         }
         if (exePath.EndsWith("GenshinImpact.exe"))
         {
@@ -101,7 +101,7 @@ public class WishlogClient
             var result = matcher.Execute(new DirectoryInfoWrapper(new FileInfo(exePath).Directory!));
             var files = result.Files.Select(x => Path.Combine(Path.GetDirectoryName(exePath)!, x.Path));
             file = files.OrderByDescending(x => new FileInfo(x).LastWriteTime).FirstOrDefault();
-            match = "https://webstatic-sea.hoyoverse.com/genshin/event/e20190909gacha-v2/index.html"u8;
+            match = "https://webstatic-sea.hoyoverse.com/genshin/event/e20190909gacha-v3/index.html"u8;
         }
         if (File.Exists(file))
         {
@@ -239,6 +239,7 @@ public class WishlogClient
         result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.Permanent, lastId, size, progress));
         result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.CharacterEvent, lastId, size, progress));
         result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.WeaponEvent, lastId, size, progress));
+        result.AddRange(await GetWishlogByTypeAsync(baseUrl, WishType.ChronicledWish, lastId, size, progress));
         return result.OrderBy(x => x.Id).ToList();
     }
 
@@ -264,6 +265,12 @@ public class WishlogClient
             return list.First().Uid;
         }
         param.WishType = WishType.WeaponEvent;
+        list = await GetWishlogByParamAsync(baseUrl, param);
+        if (list.Any())
+        {
+            return list.First().Uid;
+        }
+        param.WishType = WishType.ChronicledWish;
         list = await GetWishlogByParamAsync(baseUrl, param);
         if (list.Any())
         {
