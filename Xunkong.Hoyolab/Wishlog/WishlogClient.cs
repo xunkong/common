@@ -12,9 +12,9 @@ namespace Xunkong.Hoyolab.Wishlog;
 public class WishlogClient
 {
 
-    private const string CnUrl = "https://hk4e-api.mihoyo.com/event/gacha_info/api/getGachaLog";
+    private const string CnUrl = "https://public-operation-hk4e.mihoyo.com/gacha_info/api/getGachaLog";
 
-    private const string SeaUrl = "https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/getGachaLog";
+    private const string SeaUrl = "https://hk4e-api-os.hoyoverse.com/gacha_info/api/getGachaLog";
 
     private static readonly string UserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
@@ -136,16 +136,20 @@ public class WishlogClient
         {
             wishlogUrl = match.Groups[1].Value;
             var auth = wishlogUrl.Substring(wishlogUrl.IndexOf('?')).Replace("#/log", "");
-            if (wishlogUrl.Contains("webstatic-sea"))
-            {
-                return SeaUrl + auth;
-            }
-            else
-            {
-                return CnUrl + auth;
-            }
+            return CnUrl + auth;
         }
-        match = Regex.Match(wishlogUrl, @"(https://hk4e-api[!-z]+)");
+        match = Regex.Match(wishlogUrl, @"(https://gs.hoyoverse.com[!-z]+)");
+        if (match.Success)
+        {
+            wishlogUrl = match.Groups[1].Value;
+            var auth = wishlogUrl.Substring(wishlogUrl.IndexOf('?')).Replace("#/log", "");
+            return SeaUrl + auth;
+        }
+        match = Regex.Match(wishlogUrl, @"(https://public-operation-hk4e[!-z]+)");
+        if (!match.Success)
+        {
+            match = Regex.Match(wishlogUrl, @"(https://hk4e-api[!-z]+)");
+        }
         if (match.Success)
         {
             wishlogUrl = match.Groups[1].Value;
